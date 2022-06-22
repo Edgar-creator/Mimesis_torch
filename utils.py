@@ -55,4 +55,6 @@ def load_model(path,device,num_classes):
     test_model.to(device=device)
     test_model = test_model.eval()
     return test_model
+    
+    
 
