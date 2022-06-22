@@ -56,21 +56,3 @@ def load_model(path,device,num_classes):
     test_model = test_model.eval()
     return test_model
 
-def make_prediction(model, transform, rootdir, device):
-    files = os.listdir(rootdir)
-    preds = []
-    model.eval()
-
-    files = sorted(files, key=lambda x: float(x.split(".")[0]))
-    for file in tqdm(files):
-        img = Image.open(os.path.join(rootdir, file))
-        img = transform(img).unsqueeze(0).to(device)
-        with torch.no_grad():
-            pred = torch.sigmoid(model(img))
-            preds.append(pred.item())
-
-
-    df = pd.DataFrame({'id': np.arange(1, len(preds)+1), 'label': np.array(preds)})
-    df.to_csv('submission.csv', index=False)
-    model.train()
-    print("Done with predictions")
